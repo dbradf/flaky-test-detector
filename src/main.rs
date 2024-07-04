@@ -42,6 +42,19 @@ fn main() {
         })
         .collect();
 
+    println!("\n{}:", "Failure Output".red());
+    for result in &results {
+        println!("- {}:", result[0].test_file);
+        result.iter().for_each(|status| {
+            if let TestResult::Failed { stdout, stderr } = &status.result {
+                println!("stdout: {}", stdout);
+                println!("stderr: {}", stderr);
+            }
+        });
+    }
+
+    println!("\n{}:", "Summary".cyan());
+
     let mut any_failures = false;
     for result in results {
         let was_success = report_results(&result);
