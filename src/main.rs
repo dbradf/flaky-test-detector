@@ -1,5 +1,5 @@
 use crossterm::style::Stylize;
-use rayon::prelude::*;
+use rayon::{prelude::*, ThreadPoolBuilder};
 use std::{process::Command, time::Instant};
 
 use clap::Parser;
@@ -18,10 +18,22 @@ struct Args {
 
     /// Test files.
     test_files: Vec<String>,
+
+    /// Number of threads to execute tests with.
+    #[arg(short, long)]
+    n_threads: Option<usize>,
 }
 
 fn main() {
     let args = Args::parse();
+
+    if let Some(n_threads) = args.n_threads {
+        println!("Executing with {} threads", &n_threads);
+        ThreadPoolBuilder::new()
+            .num_threads(n_threads)
+            .build_global()
+            .unwrap();
+    }
 
     let now = Instant::now();
 
