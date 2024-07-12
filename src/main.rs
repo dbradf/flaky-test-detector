@@ -56,9 +56,13 @@ fn main() {
 
     println!("\n{}:", "Failure Output".red());
     for result in &results {
-        println!("- {}:", result[0].test_file);
+        let mut header_printed = false;
         result.iter().for_each(|status| {
             if let TestResult::Failed { stdout, stderr } = &status.result {
+                if !header_printed {
+                    println!("- {}:", result[0].test_file);
+                    header_printed = true;
+                }
                 println!("stdout: {}", stdout);
                 println!("stderr: {}", stderr);
             }
